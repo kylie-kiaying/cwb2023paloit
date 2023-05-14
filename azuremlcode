@@ -1,0 +1,31 @@
+import json
+import pandas as pd
+import numpy as np
+
+# Uploading csv file after cleaning the provided data from Kaggle
+df = pd.read_csv('diabetescleareddata.csv')
+
+# Replace missing values with the mean of each column
+df = df.fillna(df.mean())
+
+# Outcome
+X = df.drop(['Outcome'], axis=1)
+y = df['Outcome']
+
+# Training and testing of data
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(max_iter=1000)
+
+classifier.fit(X_train, y_train)
+
+y_pred = classifier.predict(X_test)
+
+# Performance of classifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+print('Accuracy:', accuracy_score(y_test, y_pred))
+print('Precision:', precision_score(y_test, y_pred))
+print('Recall:', recall_score(y_test, y_pred))
+print('F1 Score:', f1_score(y_test, y_pred))
